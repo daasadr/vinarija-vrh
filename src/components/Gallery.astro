@@ -1,0 +1,112 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const images = [
+  { src: `${base}/images/gallery-1.jpg`,  alt: 'Vinograd' },
+  { src: `${base}/images/gallery-2.jpg`,  alt: 'Klet' },
+  { src: `${base}/images/gallery-3.jpg`,  alt: 'Goriška brda' },
+  { src: `${base}/images/gallery-4.jpg`,  alt: 'Trgatev' },
+  { src: `${base}/images/gallery-5.jpg`,  alt: 'Steklenice' },
+  { src: `${base}/images/gallery-6.jpg`,  alt: 'Degustacija' },
+  { src: `${base}/images/gallery-7.jpg`,  alt: 'Vinograd jeseni' },
+  { src: `${base}/images/gallery-8.jpg`,  alt: 'Sodi' },
+  { src: `${base}/images/gallery-9.jpg`,  alt: 'Zorenje' },
+  { src: `${base}/images/gallery-10.jpg`, alt: 'Krajina Brdy' },
+  { src: `${base}/images/gallery-11.jpg`, alt: 'Vino in hrana' },
+  { src: `${base}/images/gallery-12.jpg`, alt: 'Vinarija Vrh' },
+];
+---
+
+<section class="py-0 bg-stone">
+  <div class="columns-2 sm:columns-3 lg:columns-4 gap-1.5 p-1.5">
+    {images.map((img, i) => (
+      <div
+        class="gallery-item break-inside-avoid mb-1.5 overflow-hidden cursor-pointer"
+        data-index={i}
+        data-src={img.src}>
+        <img
+          src={img.src}
+          alt={img.alt}
+          class="w-full object-cover transition-transform duration-500 hover:scale-105"
+          loading="lazy"
+          style="display:block;"
+        />
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div id="lightbox"
+  class="fixed inset-0 z-[100] bg-ink/95 hidden items-center justify-center p-4"
+  role="dialog" aria-modal="true">
+  <button id="lb-close"
+    class="absolute top-6 right-6 text-white/60 hover:text-white transition-colors"
+    aria-label="Zavřít">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+  <button id="lb-prev"
+    class="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors p-2"
+    aria-label="Předchozí">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
+  <button id="lb-next"
+    class="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors p-2"
+    aria-label="Další">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+  <img id="lb-img" src="" alt="" class="max-h-[85vh] max-w-[90vw] object-contain rounded-sm shadow-2xl" />
+  <div id="lb-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 font-label text-xs tracking-widest text-white/40"></div>
+</div>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('.gallery-item');
+  const lb      = document.getElementById('lightbox')!;
+  const lbImg   = document.getElementById('lb-img') as HTMLImageElement;
+  const lbClose = document.getElementById('lb-close')!;
+  const lbPrev  = document.getElementById('lb-prev')!;
+  const lbNext  = document.getElementById('lb-next')!;
+  const lbCount = document.getElementById('lb-counter')!;
+
+  const srcs = Array.from(items).map(el => el.dataset.src ?? '');
+  let current = 0;
+
+  function openLightbox(index: number) {
+    current = index;
+    lbImg.src = srcs[current];
+    lbCount.textContent = `${current + 1} / ${srcs.length}`;
+    lb.classList.remove('hidden');
+    lb.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lb.classList.add('hidden');
+    lb.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  function showPrev() { openLightbox((current - 1 + srcs.length) % srcs.length); }
+  function showNext() { openLightbox((current + 1) % srcs.length); }
+
+  items.forEach(item => {
+    item.addEventListener('click', () => openLightbox(Number(item.dataset.index)));
+  });
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', showPrev);
+  lbNext.addEventListener('click', showNext);
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (lb.classList.contains('hidden')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  showPrev();
+    if (e.key === 'ArrowRight') showNext();
+  });
+</script>
