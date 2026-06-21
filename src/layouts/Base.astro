@@ -7,7 +7,7 @@ const {
   title = 'Vinarija Vrh — Goriška brda',
   description = 'Rodinná vinárna Vrhovec z Goriška brda. Tri generacije, 8 vin, 12 držav izvoza.',
 } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <!doctype html>
 <html lang="sl">
@@ -19,7 +19,7 @@ const base = import.meta.env.BASE_URL;
   <!-- OG -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={`${base}images/og-image.webp`} />
+  <meta property="og:image" content={`${base}/images/og-image.webp`} />
   <meta property="og:type" content="website" />
 
   <!-- Theme -->
@@ -32,7 +32,7 @@ const base = import.meta.env.BASE_URL;
   <link rel="preconnect" href="https://a.basemaps.cartocdn.com" />
 
   <!-- Preload hero -->
-  <link rel="preload" as="image" href={`${base}images/hero-bg.webp`} />
+  <link rel="preload" as="image" href={`${base}/images/hero-bg.webp`} />
 
   <title>{title}</title>
 </head>

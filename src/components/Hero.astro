@@ -1,12 +1,12 @@
 ---
 import { t } from '../lib/translations';
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <section id="top" class="relative h-screen min-h-[600px] flex items-end overflow-hidden">
   <!-- Parallax background -->
   <div id="hero-bg"
     class="absolute inset-0 bg-center bg-cover will-change-transform"
-    style={`background-image: url('${base}images/hero-bg.webp'), linear-gradient(135deg, #2a0d0d 0%, #4a3020 100%);`}>
+    style={`background-image: url('${base}/images/hero-bg.webp'), linear-gradient(135deg, #2a0d0d 0%, #4a3020 100%);`}>
   </div>
 
   <!-- Gradient overlay -->
@@ -39,7 +39,7 @@ const base = import.meta.env.BASE_URL;
   </div>
 
   <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
+  <div class="absolute bottom-6 right-8 flex flex-col items-center gap-2 text-white/40">
     <span class="font-label text-[10px] tracking-widest uppercase">Scroll</span>
     <div class="w-px h-12 bg-gradient-to-b from-white/40 to-transparent animate-bounce"></div>
   </div>

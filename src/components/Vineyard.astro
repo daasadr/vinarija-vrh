@@ -1,12 +1,12 @@
 ---
 import { t } from '../lib/translations';
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <section id="vineyard" class="py-0">
   <!-- Fullwidth image -->
   <div class="relative h-72 md:h-96 overflow-hidden">
     <img
-      src={`${base}images/vineyard-wide.webp`}
+      src={`${base}/images/vineyard-wide.webp`}
       alt="Vinograd Goriška brda"
       class="w-full h-full object-cover"
       style="background: linear-gradient(180deg, #4a5e2d 0%, #2a3a1a 100%);"
