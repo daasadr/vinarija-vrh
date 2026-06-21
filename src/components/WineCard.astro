@@ -1,0 +1,60 @@
+---
+export interface Props {
+  name:    string;
+  type:    string;
+  grape:   string;
+  vintage: number;
+  desc:    string;
+  food:    string;
+}
+const { name, type, grape, vintage, desc, food } = Astro.props;
+
+const typeColors: Record<string, string> = {
+  bela:   'text-vine border-vine/30',
+  rdeca:  'text-wine border-wine/30',
+  rose:   'text-pink-600 border-pink-300/40',
+  peneca: 'text-sky-600 border-sky-300/40',
+  sladka: 'text-gold border-gold/30',
+};
+const typeClass = typeColors[type] ?? 'text-muted border-muted/30';
+---
+<article
+  class="wine-label p-8 flex flex-col gap-4"
+  data-type={type}>
+
+  <!-- Type badge -->
+  <div class="flex justify-between items-start">
+    <span class={`font-label text-[10px] tracking-[0.25em] uppercase border rounded-sm px-2 py-0.5 ${typeClass}`}>
+      {type}
+    </span>
+    <span class="font-label text-xs text-muted" data-key="wine_vintage">
+      {vintage}
+    </span>
+  </div>
+
+  <!-- Label center -->
+  <div class="text-center py-4 border-y border-wine/10">
+    <p class="font-label text-[10px] tracking-[0.3em] uppercase text-muted mb-2">Vinarija</p>
+    <h3 class="font-display text-2xl text-ink leading-tight">{name}</h3>
+    <p class="font-serif text-xs italic text-oak mt-1">{grape}</p>
+  </div>
+
+  <!-- Description -->
+  <p class="font-sans font-light text-sm text-muted leading-relaxed text-center card-desc">
+    {desc}
+  </p>
+
+  <!-- Food pairing -->
+  <div class="mt-auto pt-4 border-t border-wine/10">
+    <p class="font-label text-[10px] tracking-widest uppercase text-muted mb-2" data-key="wine_food">
+      Priporočamo k:
+    </p>
+    <p class="font-sans text-xs text-oak card-food">{food}</p>
+  </div>
+
+  <!-- Button -->
+  <button
+    class="mt-2 w-full font-label text-[10px] tracking-[0.2em] uppercase py-2.5 border border-wine/30 hover:bg-wine hover:text-white hover:border-wine text-wine transition-colors rounded-sm card-btn">
+    Izvedi več
+  </button>
+</article>

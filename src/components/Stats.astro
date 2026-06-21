@@ -1,0 +1,71 @@
+---
+import { t } from '../lib/translations';
+---
+<section class="bg-ink py-12">
+  <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    {[
+      { num: t.sl.stat1_num, lbl: t.sl.stat1_lbl, numId: 's1n', lblId: 's1l' },
+      { num: t.sl.stat2_num, lbl: t.sl.stat2_lbl, numId: 's2n', lblId: 's2l' },
+      { num: t.sl.stat3_num, lbl: t.sl.stat3_lbl, numId: 's3n', lblId: 's3l' },
+      { num: t.sl.stat4_num, lbl: t.sl.stat4_lbl, numId: 's4n', lblId: 's4l' },
+    ].map(({ num, lbl, numId, lblId }) => (
+      <div class="reveal">
+        <div
+          class="font-display text-4xl md:text-5xl text-gold counter-target"
+          data-num={num}
+          id={numId}>
+          {num}
+        </div>
+        <div class="font-label text-xs tracking-widest uppercase text-white/50 mt-2" id={lblId}>
+          {lbl}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+
+  // Counter animation
+  function animateCounter(el: HTMLElement) {
+    const raw = el.dataset.num ?? '';
+    const numPart = parseFloat(raw.replace('%',''));
+    if (isNaN(numPart)) return;
+    const suffix = raw.includes('%') ? '%' : '';
+    let start = 0;
+    const duration = 1400;
+    const step = (ts: number, startTs: number) => {
+      const progress = Math.min((ts - startTs) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(numPart * eased) + suffix;
+      if (progress < 1) requestAnimationFrame(ts2 => step(ts2, startTs));
+    };
+    requestAnimationFrame(ts => step(ts, ts));
+  }
+
+  const counters = document.querySelectorAll<HTMLElement>('.counter-target');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target as HTMLElement);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => observer.observe(c));
+
+  // Lang
+  type K = keyof typeof t.sl;
+  const map: Record<string, K> = {
+    s1l: 'stat1_lbl', s2l: 'stat2_lbl', s3l: 'stat3_lbl', s4l: 'stat4_lbl',
+  };
+  document.addEventListener('langchange', (e) => {
+    const lang = (e as CustomEvent<Lang>).detail;
+    for (const [id, key] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[lang][key];
+    }
+  });
+</script>

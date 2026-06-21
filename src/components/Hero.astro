@@ -1,0 +1,73 @@
+---
+import { t } from '../lib/translations';
+const base = import.meta.env.BASE_URL;
+---
+<section id="top" class="relative h-screen min-h-[600px] flex items-end overflow-hidden">
+  <!-- Parallax background -->
+  <div id="hero-bg"
+    class="absolute inset-0 bg-center bg-cover will-change-transform"
+    style={`background-image: url('${base}images/hero-bg.jpg'), linear-gradient(135deg, #2a0d0d 0%, #4a3020 100%);`}>
+  </div>
+
+  <!-- Gradient overlay -->
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-ink/30 to-transparent"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-5xl mx-auto px-6 pb-24 w-full">
+    <p class="font-label text-xs tracking-[0.3em] text-gold uppercase mb-4" id="hero-subtitle">
+      {t.sl.hero_subtitle}
+    </p>
+    <h1 class="font-display text-5xl md:text-7xl text-white leading-tight mb-6 max-w-2xl" id="hero-heading">
+      Vinarija<br><span class="text-gold">Vrh</span>
+    </h1>
+    <p class="font-sans text-lg text-white/75 mb-10 max-w-lg leading-relaxed" id="hero-lead">
+      {t.sl.hero_lead.replace('\n', '\n')}
+    </p>
+    <div class="flex flex-wrap gap-4">
+      <a href="#wines"
+        class="inline-block font-label text-xs tracking-widest uppercase px-8 py-3.5 bg-wine hover:bg-wine-mid text-white transition-colors rounded-sm"
+        id="hero-cta1">
+        {t.sl.hero_cta1}
+      </a>
+      <a href="#tastings"
+        class="inline-block font-label text-xs tracking-widest uppercase px-8 py-3.5 border border-white/40 hover:border-gold text-white hover:text-gold transition-colors rounded-sm"
+        id="hero-cta2">
+        {t.sl.hero_cta2}
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
+    <span class="font-label text-[10px] tracking-widest uppercase">Scroll</span>
+    <div class="w-px h-12 bg-gradient-to-b from-white/40 to-transparent animate-bounce"></div>
+  </div>
+</section>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+
+  // Parallax
+  const bg = document.getElementById('hero-bg')!;
+  window.addEventListener('scroll', () => {
+    const offset = window.scrollY;
+    bg.style.transform = `translateY(${offset * 0.35}px)`;
+  }, { passive: true });
+
+  // Lang
+  const items: Record<string, keyof typeof t.sl> = {
+    'hero-subtitle': 'hero_subtitle',
+    'hero-lead':     'hero_lead',
+    'hero-cta1':     'hero_cta1',
+    'hero-cta2':     'hero_cta2',
+  };
+  document.addEventListener('langchange', (e) => {
+    const lang = (e as CustomEvent<Lang>).detail;
+    for (const [id, key] of Object.entries(items)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[lang][key];
+    }
+  });
+</script>

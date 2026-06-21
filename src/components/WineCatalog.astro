@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import WineCard from './WineCard.astro';
+import { t } from '../lib/translations';
+
+const wines = await getCollection('wines');
+---
+<section id="wines" class="py-24 bg-parch/50">
+  <div class="max-w-6xl mx-auto px-6">
+    <!-- Heading -->
+    <div class="text-center mb-14 reveal">
+      <p class="font-label text-xs tracking-[0.3em] uppercase text-oak mb-3" id="wc-sub">
+        {t.sl.wines_subheading}
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl text-ink" id="wc-heading">
+        {t.sl.wines_heading}
+      </h2>
+      <div class="mt-4 mx-auto w-16 h-px bg-wine/40"></div>
+    </div>
+
+    <!-- Filter buttons -->
+    <div class="flex flex-wrap justify-center gap-2 mb-12 reveal" id="wine-filters">
+      <button class="filter-btn active" data-filter="all"  id="fb-all">{t.sl.filter_all}</button>
+      <button class="filter-btn"        data-filter="bela" id="fb-bela">{t.sl.filter_bela}</button>
+      <button class="filter-btn"        data-filter="rdeca" id="fb-rdeca">{t.sl.filter_rdeca}</button>
+      <button class="filter-btn"        data-filter="rose" id="fb-rose">{t.sl.filter_rose}</button>
+      <button class="filter-btn"        data-filter="peneca" id="fb-peneca">{t.sl.filter_peneca}</button>
+      <button class="filter-btn"        data-filter="sladka" id="fb-sladka">{t.sl.filter_sladka}</button>
+    </div>
+
+    <!-- Wine grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="wine-grid">
+      {wines.map((wine) => (
+        <div
+          class="wine-card-wrap reveal"
+          data-type={wine.data.type}
+          data-desc-sl={wine.data.description_sl}
+          data-desc-en={wine.data.description_en}
+          data-food-sl={wine.data.food_sl}
+          data-food-en={wine.data.food_en}>
+          <WineCard
+            name={wine.data.name}
+            type={wine.data.type}
+            grape={wine.data.grape}
+            vintage={wine.data.vintage}
+            desc={wine.data.description_sl}
+            food={wine.data.food_sl}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .filter-btn {
+    @apply font-label text-[10px] tracking-widest uppercase px-4 py-2 border border-wine/25 rounded-sm
+           text-muted hover:border-wine hover:text-wine transition-colors;
+  }
+  .filter-btn.active {
+    @apply bg-wine text-white border-wine;
+  }
+</style>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+
+  // Filter
+  const btns  = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const cards = document.querySelectorAll<HTMLElement>('.wine-card-wrap');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter ?? 'all';
+      cards.forEach(card => {
+        const show = filter === 'all' || card.dataset.type === filter;
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+
+  // Lang
+  type K = keyof typeof t.sl;
+  const filterMap: Record<string, K> = {
+    'wc-heading': 'wines_heading',
+    'wc-sub':     'wines_subheading',
+    'fb-all':     'filter_all',
+    'fb-bela':    'filter_bela',
+    'fb-rdeca':   'filter_rdeca',
+    'fb-rose':    'filter_rose',
+    'fb-peneca':  'filter_peneca',
+    'fb-sladka':  'filter_sladka',
+  };
+
+  document.addEventListener('langchange', (e) => {
+    const lang = (e as CustomEvent<Lang>).detail;
+
+    for (const [id, key] of Object.entries(filterMap)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[lang][key];
+    }
+
+    // Update card descriptions and food text
+    cards.forEach(card => {
+      const descEl = card.querySelector<HTMLElement>('.card-desc');
+      const foodEl = card.querySelector<HTMLElement>('.card-food');
+      const btnEl  = card.querySelector<HTMLElement>('.card-btn');
+      const lblEls = card.querySelectorAll<HTMLElement>('[data-key]');
+
+      if (descEl) descEl.textContent = lang === 'sl' ? card.dataset.descSl ?? '' : card.dataset.descEn ?? '';
+      if (foodEl) foodEl.textContent = lang === 'sl' ? card.dataset.foodSl ?? '' : card.dataset.foodEn ?? '';
+      if (btnEl)  btnEl.textContent  = t[lang].wine_btn;
+
+      lblEls.forEach(el => {
+        const key = el.dataset.key as K;
+        if (key) el.textContent = t[lang][key];
+      });
+    });
+  });
+</script>

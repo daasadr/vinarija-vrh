@@ -1,0 +1,127 @@
+---
+import { t } from '../lib/translations';
+---
+<nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between bg-transparent">
+  <!-- Logo -->
+  <a href="#top" class="flex flex-col leading-none group">
+    <span class="font-display text-2xl text-white tracking-wide">
+      Vinarija <span class="text-gold">Vrh</span>
+    </span>
+    <span class="font-label text-[10px] tracking-[0.2em] text-white/60 uppercase mt-0.5">
+      Goriška brda · est. 1962
+    </span>
+  </a>
+
+  <!-- Desktop links -->
+  <div class="hidden md:flex items-center gap-8">
+    <a href="#about"     class="nav-link" id="nl-about">{t.sl.nav_about}</a>
+    <a href="#wines"     class="nav-link" id="nl-wines">{t.sl.nav_wines}</a>
+    <a href="#vineyard"  class="nav-link" id="nl-vineyard">{t.sl.nav_vineyard}</a>
+    <a href="#tastings"  class="nav-link" id="nl-tastings">{t.sl.nav_tastings}</a>
+    <a href="#contact"   class="nav-link" id="nl-contact">{t.sl.nav_contact}</a>
+  </div>
+
+  <!-- Lang switcher + hamburger -->
+  <div class="flex items-center gap-4">
+    <button id="lang-switcher"
+      class="font-label text-xs tracking-widest text-white/70 hover:text-gold transition-colors uppercase border border-white/20 hover:border-gold rounded px-2 py-1">
+      <span id="lang-current">SL</span> / <span id="lang-other">EN</span>
+    </button>
+    <!-- Mobile hamburger -->
+    <button id="nav-toggle" class="md:hidden text-white p-1" aria-label="Menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path id="hamburger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div id="mobile-menu"
+  class="fixed top-0 left-0 right-0 bottom-0 z-40 bg-ink/95 backdrop-blur-sm flex-col items-center justify-center gap-8 hidden">
+  <a href="#about"    class="mobile-link" id="ml-about">{t.sl.nav_about}</a>
+  <a href="#wines"    class="mobile-link" id="ml-wines">{t.sl.nav_wines}</a>
+  <a href="#vineyard" class="mobile-link" id="ml-vineyard">{t.sl.nav_vineyard}</a>
+  <a href="#tastings" class="mobile-link" id="ml-tastings">{t.sl.nav_tastings}</a>
+  <a href="#contact"  class="mobile-link" id="ml-contact">{t.sl.nav_contact}</a>
+</div>
+
+<style>
+  .nav-link {
+    @apply font-label text-xs tracking-widest text-white/80 hover:text-gold transition-colors uppercase;
+  }
+  .mobile-link {
+    @apply font-display text-3xl text-white hover:text-gold transition-colors;
+  }
+</style>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+
+  // -- scroll behaviour --
+  const nav = document.getElementById('main-nav')!;
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // -- mobile menu --
+  const toggle = document.getElementById('nav-toggle')!;
+  const menu   = document.getElementById('mobile-menu')!;
+  toggle.addEventListener('click', () => {
+    const open = menu.classList.toggle('hidden');
+    menu.classList.toggle('flex', !open);
+    document.body.style.overflow = open ? '' : 'hidden';
+  });
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      menu.classList.remove('flex');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // -- language switcher --
+  type NavKey = 'nav_about'|'nav_wines'|'nav_vineyard'|'nav_tastings'|'nav_contact';
+
+  const LINK_MAP: Record<string, NavKey> = {
+    'nl-about':    'nav_about',
+    'nl-wines':    'nav_wines',
+    'nl-vineyard': 'nav_vineyard',
+    'nl-tastings': 'nav_tastings',
+    'nl-contact':  'nav_contact',
+    'ml-about':    'nav_about',
+    'ml-wines':    'nav_wines',
+    'ml-vineyard': 'nav_vineyard',
+    'ml-tastings': 'nav_tastings',
+    'ml-contact':  'nav_contact',
+  };
+
+  let lang: Lang = (localStorage.getItem('lang') as Lang) || 'sl';
+
+  function applyLang(l: Lang) {
+    lang = l;
+    localStorage.setItem('lang', l);
+    document.documentElement.lang = l;
+
+    const cur  = document.getElementById('lang-current')!;
+    const oth  = document.getElementById('lang-other')!;
+    cur.textContent = l === 'sl' ? 'SL' : 'EN';
+    oth.textContent = l === 'sl' ? 'EN' : 'SL';
+
+    for (const [id, key] of Object.entries(LINK_MAP)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[l][key];
+    }
+
+    // notify rest of the page
+    document.dispatchEvent(new CustomEvent('langchange', { detail: l }));
+  }
+
+  applyLang(lang);
+
+  document.getElementById('lang-switcher')!.addEventListener('click', () => {
+    applyLang(lang === 'sl' ? 'en' : 'sl');
+  });
+</script>

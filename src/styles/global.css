@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Lato:wght@300;400&family=Montserrat:wght@500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --wine:       #5c1a1a;
+  --wine-mid:   #8b2e2e;
+  --stone:      #f5f0e8;
+  --parch:      #ede5d5;
+  --oak:        #8b6a3e;
+  --vine:       #4a5e2d;
+  --gold:       #b8960c;
+  --ink:        #1a1208;
+  --muted:      #7a6248;
+  --divider:    rgba(92, 26, 26, 0.15);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--stone);
+  color: var(--ink);
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+}
+
+/* Grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* Divider line */
+.divider {
+  border: none;
+  border-top: 1px solid var(--divider);
+}
+
+/* Reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Wine label card */
+.wine-label {
+  background: var(--parch);
+  border: 1px solid var(--divider);
+  border-radius: 3px;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.wine-label::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--divider);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.wine-label:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(92,26,26,0.15);
+  border-color: var(--wine);
+}
+
+/* Nav scroll */
+#main-nav {
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+}
+#main-nav.scrolled {
+  background: rgba(26, 18, 8, 0.96) !important;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+}
+
+/* Counter animation */
+.counter-num {
+  transition: all 0.1s linear;
+}

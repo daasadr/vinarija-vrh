@@ -1,0 +1,92 @@
+---
+import { t } from '../lib/translations';
+const base = import.meta.env.BASE_URL;
+---
+<section id="vineyard" class="py-0">
+  <!-- Fullwidth image -->
+  <div class="relative h-72 md:h-96 overflow-hidden">
+    <img
+      src={`${base}images/vineyard-wide.jpg`}
+      alt="Vinograd Goriška brda"
+      class="w-full h-full object-cover"
+      style="background: linear-gradient(180deg, #4a5e2d 0%, #2a3a1a 100%);"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-stone/80"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="bg-stone py-20">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <p class="font-label text-xs tracking-[0.3em] uppercase text-oak mb-3" id="vy-sub">
+          {t.sl.vineyard_subheading}
+        </p>
+        <h2 class="font-display text-4xl md:text-5xl text-ink mb-8" id="vy-heading">
+          {t.sl.vineyard_heading}
+        </h2>
+        <p class="font-sans font-light text-muted max-w-2xl mx-auto leading-relaxed" id="vy-text">
+          {t.sl.vineyard_text}
+        </p>
+      </div>
+
+      <!-- 3 pillars -->
+      <div class="grid md:grid-cols-3 gap-8">
+        {[
+          {
+            icon: `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 5 L20 35 M10 15 Q20 8 30 15 M10 25 Q20 18 30 25"/>
+            </svg>`,
+            lblId: 'vy-lbl1', lbl: t.sl.vyd_lbl1,
+            txtId: 'vy-txt1', txt: t.sl.vyd_txt1,
+          },
+          {
+            icon: `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 32 Q12 18 20 15 Q28 12 35 8 M5 32 Q15 25 25 28 Q32 30 35 32"/>
+              <ellipse cx="20" cy="32" rx="15" ry="4" />
+            </svg>`,
+            lblId: 'vy-lbl2', lbl: t.sl.vyd_lbl2,
+            txtId: 'vy-txt2', txt: t.sl.vyd_txt2,
+          },
+          {
+            icon: `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="20" cy="20" r="12" />
+              <path d="M20 5 L20 10 M20 30 L20 35 M5 20 L10 20 M30 20 L35 20"/>
+              <path d="M20 20 L20 12 M20 20 L26 24" stroke-linecap="round"/>
+            </svg>`,
+            lblId: 'vy-lbl3', lbl: t.sl.vyd_lbl3,
+            txtId: 'vy-txt3', txt: t.sl.vyd_txt3,
+          },
+        ].map(({ icon, lblId, lbl, txtId, txt }) => (
+          <div class="text-center reveal">
+            <div class="w-14 h-14 mx-auto mb-5 text-vine" set:html={icon}></div>
+            <div class="font-display text-lg text-ink mb-3" id={lblId}>{lbl}</div>
+            <div class="font-sans font-light text-sm text-muted leading-relaxed" id={txtId}>{txt}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+
+  type K = keyof typeof t.sl;
+  const map: Record<string, K> = {
+    'vy-heading': 'vineyard_heading',
+    'vy-sub':     'vineyard_subheading',
+    'vy-text':    'vineyard_text',
+    'vy-lbl1':    'vyd_lbl1', 'vy-txt1': 'vyd_txt1',
+    'vy-lbl2':    'vyd_lbl2', 'vy-txt2': 'vyd_txt2',
+    'vy-lbl3':    'vyd_lbl3', 'vy-txt3': 'vyd_txt3',
+  };
+  document.addEventListener('langchange', (e) => {
+    const lang = (e as CustomEvent<Lang>).detail;
+    for (const [id, key] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[lang][key];
+    }
+  });
+</script>

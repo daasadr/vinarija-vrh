@@ -1,0 +1,66 @@
+---
+// Leaflet requires a browser DOM — loaded dynamically client-side
+---
+<div id="leaflet-map" class="w-full h-72 md:h-96 rounded-sm overflow-hidden bg-parch"
+  style="min-height: 280px;">
+  <div class="flex items-center justify-center h-full text-muted font-label text-xs tracking-widest uppercase">
+    Nalaganje zemljevida…
+  </div>
+</div>
+
+<script>
+  async function initMap() {
+    const L = (await import('leaflet')).default;
+
+    // Leaflet CSS
+    if (!document.getElementById('leaflet-css')) {
+      const link = document.createElement('link');
+      link.id   = 'leaflet-css';
+      link.rel  = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+
+    const container = document.getElementById('leaflet-map')!;
+    container.innerHTML = '';
+
+    const lat = 45.9914;
+    const lng = 13.5272;
+
+    const map = L.map(container, { scrollWheelZoom: false }).setView([lat, lng], 13);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Custom wine-colored marker
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="
+        width:36px; height:36px; background:#5c1a1a;
+        border-radius:50% 50% 50% 0; transform:rotate(-45deg);
+        border:2px solid #b8960c; box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      "></div>`,
+      iconSize:   [36, 36],
+      iconAnchor: [18, 36],
+    });
+
+    L.marker([lat, lng], { icon })
+      .addTo(map)
+      .bindPopup('<b style="font-family:serif">Vinarija Vrh</b><br>Goriška brda, Slovenija')
+      .openPopup();
+  }
+
+  // Init when element enters viewport
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      observer.disconnect();
+      initMap();
+    }
+  }, { threshold: 0.1 });
+
+  const el = document.getElementById('leaflet-map');
+  if (el) observer.observe(el);
+</script>

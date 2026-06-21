@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Stats from '../components/Stats.astro';
+import About from '../components/About.astro';
+import WineCatalog from '../components/WineCatalog.astro';
+import Vineyard from '../components/Vineyard.astro';
+import Tastings from '../components/Tastings.astro';
+import Awards from '../components/Awards.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+---
+<Base>
+  <Nav />
+  <main>
+    <Hero />
+    <Stats />
+    <About />
+    <WineCatalog />
+    <Vineyard />
+    <Tastings />
+    <Awards />
+    <Contact />
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  // Reveal on scroll — global IntersectionObserver
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>

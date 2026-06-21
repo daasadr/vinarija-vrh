@@ -1,0 +1,70 @@
+---
+import { t } from '../lib/translations';
+
+const awards = [
+  { year: '2023', title: 'Zlata medalja', org: 'Decanter World Wine Awards' },
+  { year: '2022', title: '92 bodov',      org: 'Wine Spectator' },
+  { year: '2021', title: 'Najboljše slovensko vino', org: 'Vino Ljubljana' },
+  { year: '2019', title: 'Platinasta medalja', org: 'Concours Mondial de Bruxelles' },
+];
+---
+<section class="py-20 bg-ink">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="font-label text-xs tracking-[0.3em] uppercase text-gold/70 mb-3" id="aw-sub">
+        {t.sl.awards_subheading}
+      </p>
+      <h2 class="font-display text-4xl text-white" id="aw-heading">
+        {t.sl.awards_heading}
+      </h2>
+      <div class="mt-4 mx-auto w-16 h-px bg-gold/40"></div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="relative">
+      <!-- vertical line -->
+      <div class="absolute left-1/2 top-0 bottom-0 w-px bg-gold/20 hidden md:block"></div>
+
+      <div class="space-y-8">
+        {awards.map((award, i) => (
+          <div class={`flex items-center gap-6 reveal ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+            <!-- Text side -->
+            <div class={`flex-1 text-center ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+              <div class="font-label text-[10px] tracking-widest uppercase text-gold/70 mb-1">
+                {award.org}
+              </div>
+              <div class="font-display text-xl text-white">
+                {award.title}
+              </div>
+            </div>
+            <!-- Year dot -->
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div class="w-14 h-14 rounded-full border border-gold/50 flex items-center justify-center">
+                <span class="font-display text-sm text-gold">{award.year}</span>
+              </div>
+            </div>
+            <!-- Empty side on desktop -->
+            <div class="flex-1 hidden md:block"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+  type K = keyof typeof t.sl;
+  const map: Record<string, K> = {
+    'aw-heading': 'awards_heading',
+    'aw-sub':     'awards_subheading',
+  };
+  document.addEventListener('langchange', (e) => {
+    const lang = (e as CustomEvent<Lang>).detail;
+    for (const [id, key] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[lang][key];
+    }
+  });
+</script>

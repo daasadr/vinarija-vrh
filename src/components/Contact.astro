@@ -1,0 +1,78 @@
+---
+import Map from './Map.astro';
+import { t } from '../lib/translations';
+---
+<section id="contact" class="py-24 bg-stone">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="font-label text-xs tracking-[0.3em] uppercase text-oak mb-3" id="ct-sub">
+        {t.sl.contact_subheading}
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl text-ink" id="ct-heading">
+        {t.sl.contact_heading}
+      </h2>
+      <div class="mt-4 mx-auto w-16 h-px bg-wine/40"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-12 items-start">
+      <!-- Contact info -->
+      <div class="reveal space-y-8">
+        <div>
+          <p class="font-label text-[10px] tracking-widest uppercase text-muted mb-2">Telefon</p>
+          <a href={`tel:${t.sl.contact_phone}`}
+            class="font-display text-2xl text-wine hover:text-wine-mid transition-colors"
+            id="ct-phone">
+            {t.sl.contact_phone}
+          </a>
+        </div>
+        <div>
+          <p class="font-label text-[10px] tracking-widest uppercase text-muted mb-2">E-pošta</p>
+          <a href={`mailto:${t.sl.contact_email}`}
+            class="font-display text-2xl text-wine hover:text-wine-mid transition-colors">
+            {t.sl.contact_email}
+          </a>
+        </div>
+        <div>
+          <p class="font-label text-[10px] tracking-widest uppercase text-muted mb-2" id="ct-hours-lbl">
+            {t.sl.hours_label}
+          </p>
+          <p class="font-sans text-muted" id="ct-hours">{t.sl.hours_value}</p>
+        </div>
+        <div>
+          <p class="font-label text-[10px] tracking-widest uppercase text-muted mb-2">Naslov</p>
+          <p class="font-sans text-muted" id="ct-address">{t.sl.contact_address}</p>
+        </div>
+        <p class="font-serif italic text-xs text-muted border-l-2 border-wine/30 pl-4" id="ct-map-note">
+          {t.sl.contact_map_note}
+        </p>
+      </div>
+
+      <!-- Map -->
+      <div class="reveal" style="transition-delay:0.15s">
+        <Map />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+  type K = keyof typeof t.sl;
+  const map: Record<string, K> = {
+    'ct-heading':   'contact_heading',
+    'ct-sub':       'contact_subheading',
+    'ct-address':   'contact_address',
+    'ct-map-note':  'contact_map_note',
+    'ct-phone':     'contact_phone',
+    'ct-hours-lbl': 'hours_label',
+    'ct-hours':     'hours_value',
+  };
+  document.addEventListener('langchange', (e) => {
+    const lang = (e as CustomEvent<Lang>).detail;
+    for (const [id, key] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[lang][key];
+    }
+  });
+</script>

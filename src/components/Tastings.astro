@@ -1,0 +1,172 @@
+---
+import { t } from '../lib/translations';
+---
+<section id="tastings" class="py-24 bg-parch/40">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- Heading -->
+    <div class="text-center mb-16 reveal">
+      <p class="font-label text-xs tracking-[0.3em] uppercase text-oak mb-3" id="ts-sub">
+        {t.sl.tastings_subheading}
+      </p>
+      <h2 class="font-display text-4xl md:text-5xl text-ink" id="ts-heading">
+        {t.sl.tastings_heading}
+      </h2>
+      <div class="mt-4 mx-auto w-16 h-px bg-wine/40"></div>
+    </div>
+
+    <!-- Tasting cards -->
+    <div class="grid md:grid-cols-3 gap-6 mb-20">
+      {[
+        {
+          nameId: 'tc1n', name: t.sl.tasting1_name,
+          descId: 'tc1d', desc: t.sl.tasting1_desc,
+          timeId: 'tc1t', time: t.sl.tasting1_time,
+          priceId:'tc1p', price:t.sl.tasting1_price,
+          featured: false,
+        },
+        {
+          nameId: 'tc2n', name: t.sl.tasting2_name,
+          descId: 'tc2d', desc: t.sl.tasting2_desc,
+          timeId: 'tc2t', time: t.sl.tasting2_time,
+          priceId:'tc2p', price:t.sl.tasting2_price,
+          featured: true,
+        },
+        {
+          nameId: 'tc3n', name: t.sl.tasting3_name,
+          descId: 'tc3d', desc: t.sl.tasting3_desc,
+          timeId: 'tc3t', time: t.sl.tasting3_time,
+          priceId:'tc3p', price:t.sl.tasting3_price,
+          featured: false,
+        },
+      ].map(({ nameId, name, descId, desc, timeId, time, priceId, price, featured }) => (
+        <div class={`relative rounded-sm overflow-hidden reveal border ${featured ? 'border-gold bg-wine text-white' : 'border-wine/15 bg-parch'}`}>
+          {featured && (
+            <div class="absolute top-4 right-4 bg-gold text-ink font-label text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-sm">
+              Priporočamo
+            </div>
+          )}
+          <div class="p-8">
+            <div class={`font-label text-[10px] tracking-widest uppercase mb-1 ${featured ? 'text-gold' : 'text-oak'}`} id={timeId}>
+              {time}
+            </div>
+            <h3 class={`font-display text-2xl mb-3 ${featured ? 'text-white' : 'text-ink'}`} id={nameId}>
+              {name}
+            </h3>
+            <p class={`font-sans font-light text-sm leading-relaxed mb-6 ${featured ? 'text-white/75' : 'text-muted'}`} id={descId}>
+              {desc}
+            </p>
+            <div class={`font-display text-3xl ${featured ? 'text-gold' : 'text-wine'}`} id={priceId}>
+              {price}
+            </div>
+          </div>
+          <div class={`px-8 pb-8`}>
+            <a href="#contact"
+              class={`block w-full text-center font-label text-[10px] tracking-widest uppercase py-3 rounded-sm transition-colors ${
+                featured
+                  ? 'bg-gold text-ink hover:bg-yellow-400'
+                  : 'border border-wine/30 text-wine hover:bg-wine hover:text-white'
+              }`}>
+              Rezervirajte
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Reservation form -->
+    <div class="max-w-2xl mx-auto reveal">
+      <h3 class="font-display text-2xl text-ink text-center mb-8" id="ts-form-title">Rezervirajte degustacijo</h3>
+      <form id="tasting-form" class="space-y-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="form-label" id="fl-name" for="f-name">{t.sl.form_name}</label>
+            <input id="f-name" type="text" class="form-input" required />
+          </div>
+          <div>
+            <label class="form-label" id="fl-email" for="f-email">{t.sl.form_email}</label>
+            <input id="f-email" type="email" class="form-input" required />
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="form-label" id="fl-date" for="f-date">{t.sl.form_date}</label>
+            <input id="f-date" type="date" class="form-input" required />
+          </div>
+          <div>
+            <label class="form-label" id="fl-guests" for="f-guests">{t.sl.form_guests}</label>
+            <input id="f-guests" type="number" min="1" max="20" class="form-input" />
+          </div>
+        </div>
+        <div>
+          <label class="form-label" id="fl-type" for="f-type">{t.sl.form_type}</label>
+          <select id="f-type" class="form-input">
+            <option id="fo1">{t.sl.form_opt1}</option>
+            <option id="fo2">{t.sl.form_opt2}</option>
+            <option id="fo3">{t.sl.form_opt3}</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" id="fl-msg" for="f-msg">{t.sl.form_msg}</label>
+          <textarea id="f-msg" rows="3" class="form-input resize-none"></textarea>
+        </div>
+        <button type="submit"
+          id="form-submit"
+          class="w-full font-label text-xs tracking-widest uppercase py-4 bg-wine hover:bg-wine-mid text-white transition-colors rounded-sm">
+          {t.sl.form_submit}
+        </button>
+      </form>
+      <div id="form-success"
+        class="hidden text-center py-10 font-display text-xl text-vine" id="form-success-msg">
+        {t.sl.form_success}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .form-label {
+    @apply block font-label text-[10px] tracking-widest uppercase text-muted mb-1.5;
+  }
+  .form-input {
+    @apply w-full bg-white border border-wine/20 rounded-sm px-4 py-3
+           font-sans text-sm text-ink focus:outline-none focus:border-wine
+           transition-colors;
+  }
+</style>
+
+<script>
+  import type { Lang } from '../lib/translations';
+  import { t } from '../lib/translations';
+
+  // Form submit simulation
+  const form    = document.getElementById('tasting-form') as HTMLFormElement;
+  const success = document.getElementById('form-success')!;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    form.style.display = 'none';
+    success.classList.remove('hidden');
+  });
+
+  // Lang
+  type K = keyof typeof t.sl;
+  const map: Record<string, K> = {
+    'ts-heading': 'tastings_heading', 'ts-sub':  'tastings_subheading',
+    'tc1n': 'tasting1_name', 'tc1d': 'tasting1_desc', 'tc1t': 'tasting1_time', 'tc1p': 'tasting1_price',
+    'tc2n': 'tasting2_name', 'tc2d': 'tasting2_desc', 'tc2t': 'tasting2_time', 'tc2p': 'tasting2_price',
+    'tc3n': 'tasting3_name', 'tc3d': 'tasting3_desc', 'tc3t': 'tasting3_time', 'tc3p': 'tasting3_price',
+    'fl-name': 'form_name', 'fl-email': 'form_email', 'fl-date': 'form_date',
+    'fl-guests': 'form_guests', 'fl-type': 'form_type', 'fl-msg': 'form_msg',
+    'form-submit': 'form_submit',
+    'fo1': 'form_opt1', 'fo2': 'form_opt2', 'fo3': 'form_opt3',
+  };
+  document.addEventListener('langchange', (e) => {
+    const lang = (e as CustomEvent<Lang>).detail;
+    for (const [id, key] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t[lang][key];
+    }
+    const successEl = document.getElementById('form-success');
+    if (successEl) successEl.textContent = t[lang].form_success;
+  });
+</script>
