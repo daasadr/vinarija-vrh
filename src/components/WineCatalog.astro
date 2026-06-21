@@ -15,7 +15,18 @@ const wines = await getCollection('wines');
       <h2 class="font-display text-4xl md:text-5xl text-ink" id="wc-heading">
         {t.sl.wines_heading}
       </h2>
-      <div class="mt-4 mx-auto w-16 h-px bg-wine/40"></div>
+      <!-- Vine ornament -->
+      <div class="mt-5 flex justify-center" aria-hidden="true">
+        <svg viewBox="0 0 320 24" class="w-56 h-4 text-wine/30" fill="none" stroke="currentColor" stroke-width="0.8">
+          <line x1="0" y1="12" x2="118" y2="12"/>
+          <circle cx="125" cy="12" r="3"/>
+          <path d="M138 12 Q145 4 152 12 Q145 8 138 12Z" fill="currentColor" opacity="0.6"/>
+          <polygon points="160,5 169,12 160,19 151,12" stroke-width="0.9"/>
+          <path d="M168 12 Q175 20 182 12 Q175 16 168 12Z" fill="currentColor" opacity="0.6"/>
+          <circle cx="195" cy="12" r="3"/>
+          <line x1="202" y1="12" x2="320" y2="12"/>
+        </svg>
+      </div>
     </div>
 
     <!-- Filter buttons -->

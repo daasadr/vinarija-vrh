@@ -1,7 +1,8 @@
 ---
 import { t } from '../lib/translations';
 ---
-<section class="bg-ink py-12">
+<section class="bg-ink relative z-10"
+  style="clip-path: polygon(0 18px, 100% 0, 100% calc(100% - 18px), 0 100%); padding: 60px 0; margin: -18px 0;">
   <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
     {[
       { num: t.sl.stat1_num, lbl: t.sl.stat1_lbl, numId: 's1n', lblId: 's1l' },

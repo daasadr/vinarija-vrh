@@ -2,8 +2,16 @@
 import { t } from '../lib/translations';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
-<section id="about" class="py-24 bg-stone">
-  <div class="max-w-6xl mx-auto px-6">
+<section id="about" class="py-24 bg-stone relative overflow-hidden">
+  <!-- Decorative watermark -->
+  <div aria-hidden="true"
+    class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+    <span class="font-display font-bold uppercase text-ink whitespace-nowrap"
+      style="font-size: clamp(5rem, 18vw, 16rem); opacity: 0.025; letter-spacing: 0.15em; transform: translateY(10%);">
+      Vrhovec
+    </span>
+  </div>
+  <div class="max-w-6xl mx-auto px-6 relative z-10">
     <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
 
       <!-- Image block -->
@@ -62,6 +70,23 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </div>
 </section>
+
+<!-- Dekorativní SVG ornament — vine divider, vložen mezi About a WineCatalog -->
+<div aria-hidden="true" class="flex items-center justify-center py-6 bg-stone">
+  <svg viewBox="0 0 320 24" class="w-64 h-5 text-wine/25" fill="none" stroke="currentColor" stroke-width="0.8">
+    <line x1="0" y1="12" x2="118" y2="12"/>
+    <circle cx="125" cy="12" r="3"/>
+    <!-- Left leaf -->
+    <path d="M138 12 Q145 4 152 12 Q145 8 138 12Z" fill="currentColor" opacity="0.6"/>
+    <!-- Central diamond -->
+    <polygon points="160,5 169,12 160,19 151,12" stroke-width="0.9"/>
+    <!-- Right leaf -->
+    <path d="M168 12 Q175 4 182 12 Q175 8 168 12Z" fill="currentColor" opacity="0.6" transform="scale(-1,1) translate(-350,0)"/>
+    <path d="M168 12 Q175 20 182 12 Q175 16 168 12Z" fill="currentColor" opacity="0.6" transform="scale(-1,1) translate(-350,0)"/>
+    <circle cx="195" cy="12" r="3"/>
+    <line x1="202" y1="12" x2="320" y2="12"/>
+  </svg>
+</div>
 
 <script>
   import type { Lang } from '../lib/translations';
